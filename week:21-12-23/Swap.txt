@@ -1,1 +1,17 @@
-
+Q. Swapping using Pointers
+#include <stdio.h>
+void swap(int *a,int *b);
+int main()
+{
+    int a,b;
+    printf("Enter the valus of a and b ");
+    scanf("%d %d",&a,&b);
+    printf("The values of a and b before swapping: %d %d \n",a,b);
+    swap(&a,&b);
+    printf("The values of a and b after swapping: %d %d ",a,b);
+}
+void swap(int *a,int *b){
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
