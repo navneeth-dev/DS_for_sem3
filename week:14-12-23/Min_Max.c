@@ -1,6 +1,6 @@
-Q. Create a program in C to search for the minimum and maximum elements in an array
-with a user defined function. 
-  #include <stdio.h>
+//Q. Create a program in C to search for the minimum and maximum elements in an array
+//with a user defined function. 
+#include <stdio.h>
 
 void findMinMax(int arr[], int size, int *min, int *max) {
 
