@@ -6,40 +6,49 @@ struct Node {
     struct Node* next;
 };
 
-struct Node* enqueue(struct Node* rear, int data) {
+struct Node* enqueue(struct Node* front, struct Node* rear, int data) {
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
     newNode->data = data;
     newNode->next = NULL;
 
+    if (front == NULL) {
+        // Queue is empty
+        front = rear = newNode;
+    } else {
+        rear->next = newNode;
+        rear = newNode;
+    }
+    
+    return rear;  // Return the updated rear
+}
+
+struct Node* dequeue(struct Node* front, struct Node* rear) {
+    if (front == NULL && rear == NULL) {
+        printf("UNDER-FLOW\n");
+        exit(1);
+    }
+
+    struct Node* ptr = front;
+    if (front == rear) {
+        // Only one element in the queue
+        front = rear = NULL;
+    } else {
+        front = ptr->next;
+    }
+    free(ptr);
+    return front;  // Return the updated front
+}
+
+void display(struct Node* front, struct Node* rear) {
     if (rear == NULL) {
-        return newNode;
-    }
-
-    rear->next = newNode;
-    return newNode;
-}
-
-struct Node* dequeue(struct Node* front) {
-    if (front == NULL) {
-        printf("Queue underflow\n");
-        return NULL;
-    }
-    struct Node* temp = front;
-    front = front->next;
-    free(temp);
-    return front;
-}
-
-void display(struct Node* front) {
-    if (front == NULL) {
         printf("Queue is empty\n");
         return;
     }
     printf("Queue elements: ");
-    struct Node* current = front;
-    while (current != NULL) {
-        printf("%d ", current->data);
-        current = current->next;
+    struct Node* ptr = front;
+    while (ptr != NULL) {
+        printf("%d ", ptr->data);
+        ptr = ptr->next;
     }
     printf("\n");
 }
@@ -63,16 +72,17 @@ int main() {
             case 1:
                 printf("Enter the element to enqueue: ");
                 scanf("%d", &element);
-                rear = enqueue(rear, element);
+                rear = enqueue(front, rear, element);
                 if (front == NULL) {
-                    front = rear; // Set front to the first element if it's the first element
+                    // Update front when the queue was empty
+                    front = rear;
                 }
                 break;
             case 2:
-                front = dequeue(front);
+                front = dequeue(front, rear);
                 break;
             case 3:
-                display(front);
+                display(front, rear);
                 break;
             case 4:
                 printf("Exiting the program.\n");
@@ -82,6 +92,7 @@ int main() {
         }
     } while (choice != 4);
 
+    // Free memory before exiting the program
     while (front != NULL) {
         struct Node* temp = front;
         front = front->next;
