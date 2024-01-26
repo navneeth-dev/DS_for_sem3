@@ -8,24 +8,27 @@ struct Node {
 
 struct Node* push(struct Node* top, int data) {
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
-    if (newNode == NULL) {
-        printf("Memory allocation failed\n");
-        exit(EXIT_FAILURE);
-    }
     newNode->data = data;
+    if(top==NULL){
+        newNode->next=NULL;
+        top = newNode;
+        return top;
+    }
     newNode->next = top;
-    return newNode;
+    top = newNode;
+    return top;
 }
 
 struct Node* pop(struct Node* top) {
-    if (top == NULL) {
-        printf("Stack underflow\n");
-        return NULL;
+    if(top==NULL){
+        printf("Under-flow");
+        exit(1);
     }
-    struct Node* temp = top;
-    top = top->next;
-    free(temp);
+    struct Node *ptr = top;
+    top = ptr->next;
+    free(ptr);
     return top;
+    
 }
 
 void display(struct Node* top) {
