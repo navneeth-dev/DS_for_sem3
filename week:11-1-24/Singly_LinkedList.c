@@ -24,7 +24,7 @@ struct Node* insertMid(struct Node* first, int data, int pos) {
     struct Node* p1 = first;
     struct Node* p2 = first;
     int i = 0;
-    while (i != pos && p2->next != NULL) {
+    while (i != pos && p2!= NULL) {
         p1 = p2;
         p2 = p2->next;
         i++;
@@ -48,6 +48,9 @@ struct Node* insertEnd(struct Node* first, int data) {
     return first;
 }
 void display(struct Node* first) {
+    if(first==NULL){
+        printf("Empty List\n");
+    }
     struct Node* p = first;
     while (p != NULL) {
         printf("Element %d\n", p->data);
