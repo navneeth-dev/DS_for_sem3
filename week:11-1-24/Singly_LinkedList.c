@@ -1,114 +1,98 @@
-//1. To insert in a linked list
 #include <stdio.h>
 #include <stdlib.h>
-
-// Describes a Node
 struct Node {
     int data;
-    struct Node *next;
+    struct Node* next;
 };
-
-// Inserts an element at the start of the node
-struct Node *insertstart(struct Node *start, int data) {
-    struct Node *ptr = (struct Node *)malloc(sizeof(struct Node));
-    ptr->data = data;
-    ptr->next = start;
-    return ptr;
-}
-
-// Inserts a new Node at a given index
-struct Node *insertIndex(struct Node *start, int data, int index) {
-    struct Node *ptr = (struct Node *)malloc(sizeof(struct Node));
-    ptr->data = data;
-
-    struct Node *p = start;
-    int i = 0;
-    while (i < index - 1 && p != NULL) {
-        p = p->next;
-        i++;
-    }
-    if (p == NULL) {
-        printf("Index out of bounds:\n");
-        free(ptr);
-        return start;
-    }
-    ptr->next = p->next;
-    p->next = ptr;
-    return start;
-}
-
-// Insert at the end
-struct Node *InsertEnd(struct Node *start, int data) {
-    struct Node *ptr = (struct Node *)malloc(sizeof(struct Node));
+struct Node* newNode(int data) {
+    struct Node* ptr = (struct Node*)malloc(sizeof(struct Node));
     ptr->data = data;
     ptr->next = NULL;
-
-    if (start == NULL) {
-        // If the list is empty, the new node becomes the start
-        return ptr;
+    return ptr;
+}
+struct Node* insertBeg(struct Node* first, int data) {
+    struct Node* ptr = newNode(data);
+    ptr->next = first;
+    first = ptr;
+    return first;
+}
+struct Node* insertMid(struct Node* first, int data, int pos) {
+    struct Node* ptr = newNode(data);
+    if (pos == 0) {
+        return insertBeg(first, data);
     }
-
-    struct Node *p = start;
+    struct Node* p1 = first;
+    struct Node* p2 = first;
+    int i = 0;
+    while (i != pos && p2->next != NULL) {
+        p1 = p2;
+        p2 = p2->next;
+        i++;
+    }
+    if (i != pos) {
+        printf("Position %d is invalid\n", pos);
+        return first;
+    }
+    p1->next = ptr;
+    ptr->next = p2;
+    return first;
+}
+struct Node* insertEnd(struct Node* first, int data) {
+    struct Node* ptr = newNode(data);
+    struct Node* p = first;
     while (p->next != NULL) {
         p = p->next;
     }
     p->next = ptr;
-    return start;
+    ptr->next = NULL;
+    return first;
 }
-
-// Prints all the elements present in a Node
-void display(struct Node *ptr) {
-    while (ptr != NULL) {
-        printf("Element: %d\n", ptr->data);
-        ptr = ptr->next;
+void display(struct Node* first) {
+    struct Node* p = first;
+    while (p != NULL) {
+        printf("Element %d\n", p->data);
+        p = p->next;
     }
 }
-
 int main() {
-    struct Node *first = NULL;
-
-    char choice;
-    int newData, newIndex;
-
-    do {
-        printf("\nChoose an option:\n");
+    struct Node* head = NULL;
+    int choice, data, pos;
+    while (1) {
+        printf("\nOptions:\n");
         printf("1. Insert at the beginning\n");
-        printf("2. Insert at a specific index\n");
-        printf("3. Insert at end\n");
+        printf("2. Insert at a specific position\n");
+        printf("3. Insert at the end\n");
         printf("4. Display the list\n");
-        printf("5. Quit\n");
+        printf("5. Exit\n");
         printf("Enter your choice: ");
-        scanf(" %c", &choice);
-
+        scanf("%d", &choice);
         switch (choice) {
-            case '1':
-                printf("Enter the new element to insert at the beginning: ");
-                scanf("%d", &newData);
-                first = insertstart(first, newData);
+            case 1:
+                printf("Enter data to insert at the beginning: ");
+                scanf("%d", &data);
+                head = insertBeg(head, data);
                 break;
-            case '2':
-                printf("Enter the new element to insert: ");
-                scanf("%d", &newData);
-                printf("Enter the index to insert at: ");
-                scanf("%d", &newIndex);
-                first = insertIndex(first, newData, newIndex);
+            case 2:
+                printf("Enter data to insert: ");
+                scanf("%d", &data);
+                printf("Enter position: ");
+                scanf("%d", &pos);
+                head = insertMid(head, data, pos);
                 break;
-            case '3':
-                printf("Enter the new element to insert: ");
-                scanf("%d", &newData);
-                first = InsertEnd(first, newData);
+            case 3:
+                printf("Enter data to insert at the end: ");
+                scanf("%d", &data);
+                head = insertEnd(head, data);
                 break;
-            case '4':
-                printf("Linked List:\n");
-                display(first);
+            case 4:
+                display(head);
                 break;
-            case '5':
-                printf("Quitting the program.\n");
-                break;
+            case 5:
+                printf("Exiting the program.\n");
+                exit(0);
             default:
                 printf("Invalid choice. Please enter a valid option.\n");
         }
-    } while (choice != '5');
-
+    }
     return 0;
 }
