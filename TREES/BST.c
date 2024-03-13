@@ -41,14 +41,17 @@ void postOrder(struct Node* root) {
     printf("%d ", root->data);
 }
 
-void display(struct Node* root, int level) {
-    if (root != NULL) {
-        display(root->right, level + 1);
-        for (int i = 0; i < level; i++)
-            printf("\t");
-        printf("%d\n", root->data);
-        display(root->left, level + 1);
+void search(struct Node* root,int data){
+    if(root==NULL){
+        printf("%d not found\n",data);
+        return;
     }
+    if(root->data == data){
+        printf("%d found\n",root->data);
+        return;
+    }
+    if(data<root->data) search(root->left,data);
+    else search(root->right,data);
 }
 int main() {
     struct Node* root = NULL;
@@ -70,8 +73,7 @@ int main() {
     printf("\nPostorder traversal: ");
     postOrder(root);
 
-    printf("\n\nBinary Tree Structure:\n");
-    display(root, 0);
+    search(root,41);
 
     return 0;
 }
