@@ -1,60 +1,83 @@
-#include <stdio.h>
-#define m 7
+#include<stdlib.h>
+#include<stdio.h>
 
-int arr[7];
+int table[100];
 
-int hash1(int data){
-    return data%m;
+// Hash Function: x is the number of elements
+
+int hash(int key, int x) {
+    return key % x;
 }
 
-void insert(int data){
-    int val = hash1(data);
-    int i = 0;
-    while (arr[val] != -1) {
-        i++;
-        val = (val + i) % 7;
-        if (i >= 7) {
-            printf("Error: Hash table is full.\n");
-            return;
+void insert(int key,int x){
+    int value = hash(key,x);
+    
+    // if the slot is empty, then we directly insert the key
+    
+    if(table[value]==-999) table[value] = key;
+    
+    // Resolving collision via linear probing
+    
+    else{
+        int i = 1;
+        while(table[value]!=-999 && i<x){
+            value = hash(value+i,x);
+            i++;
         }
+        if(table[value]==-999) table[value]=key;
+        else printf("Table full\n");
     }
-    arr[val] = data;
 }
 
-
-void display() {
-    for (int i = 0; i < 7; i++) {
-        printf("%d ", arr[i]);
+void search(int key,int x){
+    int value = hash(key,x);
+    
+    // If key is present in the slot itself, then we print it
+    
+    if(table[value]==key) printf("Key %d found\n",key);
+    else{
+        int i = 1;
+        
+        // Otherwise we search through the array
+        
+        while(table[value]!=key && i<x){
+            value = hash(value+i,x);
+            i++;
+        }
+        if(table[value]==key) printf("Key %d found\n",key);
+        else printf("Key %d not found\n",key);
     }
-    printf("\n");
 }
 
-
-int search(int data){
-    int val = hash1(data);
-    int i = 0;
-    while(arr[val]!=data){
-        if(i>=7) return -1;
-        i++;
-        val = (val + i) % 7;
+void display(int n){
+    for(int i=0;i<n;i++){
+        printf("%d ",table[i]);
     }
-    return 1;
 }
 
-int main()
-{
-    for(int i = 0;i<7;i++){
-        arr[i] = -1;
+int main() {
+    int n, ele;
+    printf("Enter the number of elements to be inserted\n");
+    scanf("%d", &n);
+    
+    // We initialize all objects of the structure to have the data as -999
+    // It is easier to work with this way
+    
+    for (int i = 0; i < n; i++) {
+        table[i] = -999;
     }
     
-    insert(23);
-    insert(23);
-    insert(12);
-    insert(61);
-    insert(61);
-    insert(61);
-
-    printf("%d\n",search(22));
+    printf("Enter the key values\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &ele);
+        insert(ele, n);
+    }
     
-    display();
+    display(n);
+    
+    printf("Enter the element you want to search");
+    scanf("%d",&ele);
+    search(ele,n);
+
+    return 0;
 }
